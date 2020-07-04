@@ -1,5 +1,5 @@
 import express from "express";
-import { accountsRouter } from "./routes/accounts.js";
+import { accountsRouter } from "../routes/accounts.js";
 import mongoose from "mongoose";
 import fs from "fs";
 
