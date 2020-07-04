@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="./css/style.css" />
+
+    <title>Visualizador de RGB</title>
+  </head>
+  <body>
+    <h1>RGB Visualizer</h1>
+    <div class="container">
+      <div class="color-list">
+        <ul>
+          <li>(R) Vermelho:</li>
+          <li>(G) Verde:</li>
+          <li>(B) Azul:</li>
+        </ul>
+      </div>
+
+      <div class="sliders">
+        <input type="range" name="red" id="red" min="0" max="255" value="0" />
+        <input
+          type="range"
+          name="green"
+          id="green"
+          min="0"
+          max="255"
+          value="0"
+        />
+        <input type="range" name="blue" id="blue" min="0" max="255" value="0" />
+      </div>
+
+      <div class="inputs">
+        <input type="text" disabled placeholder="0" id="redInput" />
+        <input type="text" disabled placeholder="0" id="greenInput" />
+        <input type="text" disabled placeholder="0" id="blueInput" />
+      </div>
+    </div>
+    <div class="box"></div>
+
+    <script src="./scripts/main.js"></script>
+  </body>
+</html>
