@@ -139,6 +139,10 @@ class CashOperationsController {
     try {
       const agency = req.params.agency;
       const allAgencyAccounts = await accountModel.find({ agency: agency });
+      if (allAgencyAccounts.length === 0) {
+        res.status(404).send("Agency not found in database");
+        return;
+      }
       const allValues = allAgencyAccounts.map((account) => {
         return account.balance;
       });
@@ -148,6 +152,40 @@ class CashOperationsController {
       }, 0);
       const averageBalance = totalValue / allAgencyAccounts.length;
       res.status(200).send(`Average Balance in this agency: ${averageBalance}`);
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  }
+
+  async lowestBalance(req, res) {
+    try {
+      const limit = parseInt(req.params.limit);
+      const sortedBalance = await accountModel
+        .find()
+        .sort({ balance: "asc" })
+        .limit(limit);
+      if (sortedBalance.length === 0) {
+        res.status(400).send("Couldn't fetch any data from database");
+        return;
+      }
+      res.status(200).send(sortedBalance);
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  }
+
+  async highestBalance(req, res) {
+    try {
+      const limit = parseInt(req.params.limit);
+      const sortedBalance = await accountModel
+        .find()
+        .sort({ balance: "desc" })
+        .limit(limit);
+      if (sortedBalance.length === 0) {
+        res.status(400).send("Couldn't fetch any data from database");
+        return;
+      }
+      res.status(200).send(sortedBalance);
     } catch (error) {
       res.status(500).send(error);
     }
