@@ -1,5 +1,4 @@
 import { accountModel } from "../../models/account.js";
-import { accountsRouter } from "../routes/accounts.js";
 
 const WITHDRAW_TAX = 1;
 const TRANSFER_TAX = 8;
