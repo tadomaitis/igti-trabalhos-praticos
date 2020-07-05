@@ -88,6 +88,52 @@ class CashOperationsController {
       res.status(500).send(error);
     }
   }
+
+  async transfer(req, res) {
+    try {
+      const {
+        sourceAgencyNumber,
+        sourceAccountNumber,
+        destinyAgencyNumber,
+        destinyAccountNumber,
+        transferValue,
+      } = req.body;
+
+      const sourceAccount = await accountModel.findOne({
+        agency: sourceAgencyNumber,
+        account: sourceAccountNumber,
+      });
+
+      const destinyAccount = await accountModel.findOne({
+        agency: destinyAgencyNumber,
+        account: destinyAccountNumber,
+      });
+
+      if (!sourceAccount || !destinyAccount) {
+        res.status(404).send("Account not found in database");
+        return;
+      }
+
+      const sourceAccountBalance = sourceAccount.balance;
+      const destinyAccountBalance = destinyAccount.balance;
+
+      if (sourceAgencyNumber === destinyAgencyNumber) {
+        sourceAccount.balance = sourceAccountBalance - transferValue;
+      } else {
+        sourceAccount.balance =
+          sourceAccountBalance - transferValue - TRANSFER_TAX;
+      }
+      destinyAccount.balance = destinyAccountBalance + transferValue;
+      sourceAccount.save();
+      destinyAccount.save();
+
+      res
+        .status(200)
+        .send(`Transfer succeed; remaining balance: ${sourceAccount.balance}`);
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  }
 }
 
 export default CashOperationsController;
