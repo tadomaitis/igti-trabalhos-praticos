@@ -22,5 +22,9 @@ accountsRouter.get("/:agency/:account", cashOperationsController.balance);
 accountsRouter.patch("/transfer", cashOperationsController.transfer);
 accountsRouter.patch("/withdraw", cashOperationsController.withdraw);
 accountsRouter.patch("/deposit", cashOperationsController.deposit);
+accountsRouter.patch(
+  "/private",
+  cashOperationsController.moveClientToPrivateAgency
+);
 
 export { accountsRouter };

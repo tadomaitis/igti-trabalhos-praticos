@@ -190,6 +190,52 @@ class CashOperationsController {
       res.status(500).send(error);
     }
   }
+
+  async moveClientToPrivateAgency(_, res) {
+    try {
+      let accounts = await accountModel.aggregate([
+        {
+          $sort: {
+            balance: -1,
+          },
+        },
+        {
+          $group: {
+            _id: "$agency",
+            account: {
+              $first: "$_id",
+            },
+          },
+        },
+      ]);
+
+      for (let account of accounts) {
+        const updatedAccount = await accountModel.findByIdAndUpdate(
+          account.account,
+          {
+            $set: {
+              agency: 99,
+            },
+          },
+          {
+            runValidators: true,
+          }
+        );
+      }
+
+      accounts = await accountModel
+        .find({
+          agency: 99,
+        })
+        .exec();
+
+      res.send(accounts);
+
+      return accounts;
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  }
 }
 
 export default CashOperationsController;
