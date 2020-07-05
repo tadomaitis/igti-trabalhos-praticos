@@ -15,5 +15,6 @@ accountsRouter.get("/accounts/:id", accountsController.show);
 accountsRouter.delete("/accounts/:id", accountsController.delete);
 
 accountsRouter.patch("/deposit", cashOperationsController.deposit);
+accountsRouter.patch("/withdraw", cashOperationsController.withdraw);
 
 export { accountsRouter };
