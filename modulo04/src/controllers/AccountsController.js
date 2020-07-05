@@ -34,13 +34,20 @@ class AccountsController {
 
   async delete(req, res) {
     try {
-      const account = await accountModel.findOneAndDelete({
-        _id: req.params.id,
+      const { agency, account } = req.params;
+      const deletingAccount = await accountModel.findOneAndDelete({
+        agency: agency,
+        account: account,
       });
-      if (!account) {
+      if (!deletingAccount) {
         res.status(404).send("Account not found in database");
+        return;
       }
-      res.status(200).send("ok");
+
+      const agencyAccounts = await accountModel.find({ agency: agency });
+      res.send(
+        `Account deleted; there are still ${agencyAccounts.length} active accounts in this agency.`
+      );
     } catch (error) {
       res.status(500).send(error);
     }

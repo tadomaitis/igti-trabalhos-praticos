@@ -13,6 +13,7 @@ accountsRouter.get("/accounts", accountsController.index);
 accountsRouter.post("/accounts", accountsController.create);
 accountsRouter.get("/accounts/:id", accountsController.show);
 accountsRouter.delete("/accounts/:id", accountsController.delete);
+accountsRouter.delete("/:agency/:account", accountsController.delete);
 
 accountsRouter.patch("/deposit", cashOperationsController.deposit);
 accountsRouter.patch("/withdraw", cashOperationsController.withdraw);
