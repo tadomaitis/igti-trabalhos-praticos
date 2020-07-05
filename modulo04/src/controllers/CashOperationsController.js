@@ -1,4 +1,5 @@
 import { accountModel } from "../../models/account.js";
+import { accountsRouter } from "../routes/accounts.js";
 
 const WITHDRAW_TAX = 1;
 const TRANSFER_TAX = 8;
@@ -130,6 +131,24 @@ class CashOperationsController {
       res
         .status(200)
         .send(`Transfer succeed; remaining balance: ${sourceAccount.balance}`);
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  }
+
+  async averageBalance(req, res) {
+    try {
+      const agency = req.params.agency;
+      const allAgencyAccounts = await accountModel.find({ agency: agency });
+      const allValues = allAgencyAccounts.map((account) => {
+        return account.balance;
+      });
+
+      const totalValue = allValues.reduce((accum, curr) => {
+        return accum + curr;
+      }, 0);
+      const averageBalance = totalValue / allAgencyAccounts.length;
+      res.status(200).send(`Average Balance in this agency: ${averageBalance}`);
     } catch (error) {
       res.status(500).send(error);
     }
