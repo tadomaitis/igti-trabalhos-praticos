@@ -9,10 +9,6 @@ const cashOperationsController = new CashOperationsController();
 
 accountsRouter.use(express.json());
 
-// accountsRouter.get("/accounts", (req, res) => {
-//   res.send({ ok: true });
-// });
-
 accountsRouter.get("/accounts", accountsController.index);
 accountsRouter.post("/accounts", accountsController.create);
 accountsRouter.get("/accounts/:id", accountsController.show);
