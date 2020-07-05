@@ -1,7 +1,7 @@
 import { accountModel } from "../../models/account.js";
 
 const WITHDRAW_TAX = 1;
-const TRANSFER = 8;
+const TRANSFER_TAX = 8;
 
 class CashOperationsController {
   async deposit(req, res) {
@@ -13,14 +13,16 @@ class CashOperationsController {
         account: account,
       });
 
+      if (!depositDestiny) {
+        res.status(404).send("Account not found in database");
+        return;
+      }
+
       const currentBalance = depositDestiny.balance;
       depositDestiny.balance = currentBalance + depositValue;
       await depositDestiny.save();
 
       res.status(200).send("Deposit has ben completed successfully.");
-      if (!depositDestiny) {
-        res.status(404).send("Account not found in database");
-      }
     } catch (error) {
       res.status(500).send(error);
     }
@@ -35,6 +37,11 @@ class CashOperationsController {
         account: account,
       });
 
+      if (!withdrawSource) {
+        res.status(404).send("Account not found in database");
+        return;
+      }
+
       const currentBalance = withdrawSource.balance;
 
       if (currentBalance < withdrawValue + 1) {
@@ -43,16 +50,16 @@ class CashOperationsController {
           .send(
             `Current account balance isn't enough to complete this operation`
           );
+        return;
       }
 
       withdrawSource.balance = currentBalance - withdrawValue - WITHDRAW_TAX;
       await withdrawSource.save();
 
-      res.status(200).send("Withdraw has ben completed successfully.");
-
-      if (!withdrawSource) {
-        res.status(404).send("Account not found in database");
-      }
+      res.status(200).send(
+        `Withdraw has ben completed successfully.
+          The current balance now is ${withdrawSource.balance}`
+      );
     } catch (error) {
       res.status(500).send(error);
     }
