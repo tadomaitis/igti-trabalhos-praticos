@@ -22,7 +22,10 @@ class CashOperationsController {
       depositDestiny.balance = currentBalance + depositValue;
       await depositDestiny.save();
 
-      res.status(200).send("Deposit has ben completed successfully.");
+      res.status(200).send(
+        `Deposit has ben completed successfully.
+          The current balance now is ${depositDestiny.balance}`
+      );
     } catch (error) {
       res.status(500).send(error);
     }
@@ -60,6 +63,27 @@ class CashOperationsController {
         `Withdraw has ben completed successfully.
           The current balance now is ${withdrawSource.balance}`
       );
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  }
+
+  async balance(req, res) {
+    try {
+      const { agency, account } = req.params;
+      const currentAccount = await accountModel.findOne({
+        agency: agency,
+        account: account,
+      });
+
+      if (!currentAccount) {
+        res.status(404).send("Account not found in database");
+        return;
+      }
+
+      res
+        .status(200)
+        .send(`Current account balance: ${currentAccount.balance}`);
     } catch (error) {
       res.status(500).send(error);
     }
